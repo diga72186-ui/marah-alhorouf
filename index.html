@@ -36,6 +36,11 @@ nav{display:flex;gap:10px;margin:17px 0 20px;flex-wrap:wrap}.tab{flex:1 1 180px;
 
 /* إضافات الإصدار التعليمي */
 #englishGrid .letter{direction:ltr}.skill-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;max-width:650px;margin:18px auto}.skill-option{border:3px solid #e2e8f0;background:#f8fafc;border-radius:20px;padding:15px;min-height:105px;font-size:2.5rem}.skill-option b{display:block;font-size:1rem}.quiz-progress{height:12px;background:#e2e8f0;border-radius:99px;overflow:hidden;max-width:500px;margin:14px auto}.quiz-progress span{display:block;height:100%;background:#2ec4b6;transition:width .2s}.result-stars{font-size:2rem;color:#ca8a04}.tab{min-width:130px}
+#traceCanvas{cursor:crosshair}
+.stat-card,.badge-card{background:#fff;border:2px solid #e2e8f0;border-radius:18px;padding:14px;text-align:center;box-shadow:var(--shadow);font-weight:900}
+.stat-card strong{display:block;font-size:1.7rem;color:#0f766e}
+.badge-card{font-size:1rem}.badge-card.locked{opacity:.45;filter:grayscale(1)}
+#animalGrid .letter{min-height:125px}
 </style>
 </head>
 <body>
@@ -45,7 +50,7 @@ nav{display:flex;gap:10px;margin:17px 0 20px;flex-wrap:wrap}.tab{flex:1 1 180px;
  <div class="tools"><div class="stars">⭐ النجوم: <span id="stars">0</span></div><button id="voice" class="voice" type="button" aria-pressed="true">🔊 الصوت شغال</button></div>
 </header>
 <nav aria-label="الأقسام الرئيسية">
- <button class="tab active" data-tab="letters">🔤 الحروف العربية</button><button class="tab" data-tab="english">🔠 English</button><button class="tab" data-tab="games">🎮 ألعاب الحروف</button><button class="tab" data-tab="skills">🧩 ألعاب الذكاء</button><button class="tab" data-tab="level">🏆 اختبر مستواك</button>
+ <button class="tab active" data-tab="letters">🔤 الحروف العربية</button><button class="tab" data-tab="english">🔠 English</button><button class="tab" data-tab="games">🎮 ألعاب الحروف</button><button class="tab" data-tab="skills">🧩 ألعاب الذكاء</button><button class="tab" data-tab="level">🏆 اختبر مستواك</button><button class="tab" data-tab="write">✍️ اكتب وتعلّم</button><button class="tab" data-tab="animals">🐾 عالم الحيوان</button><button class="tab" data-tab="parent">📊 إنجازاتي</button>
 </nav>
 <main>
 <section id="letters" class="panel active"><div id="lettersGrid" class="grid"></div></section>
@@ -69,6 +74,38 @@ nav{display:flex;gap:10px;margin:17px 0 20px;flex-wrap:wrap}.tab{flex:1 1 180px;
  <div id="skillStage" class="stage"></div>
 </section>
 <section id="level" class="panel"><div class="stage"><div class="prompt">🏆 تحدي الأبطال</div><h2>اختبر معلوماتك!</h2><p>جاوب عن 5 أسئلة متنوعة، وشوف نتيجتك في النهاية.</p><button class="btn primary" id="startQuiz">ابدأ الاختبار ⭐</button><div id="quizStage" style="margin-top:18px"></div></div></section>
+<section id="write" class="panel">
+ <div class="stage">
+  <div class="prompt">✍️ اختار حرف واتبع شكله بإصبعك</div>
+  <div class="actions" style="margin-bottom:12px">
+   <label for="traceLetter" style="font-weight:900">الحرف:</label>
+   <select id="traceLetter" class="btn soft" aria-label="اختيار الحرف"></select>
+   <button class="btn soft" id="clearTrace">مسح اللوحة</button>
+   <button class="btn primary" id="doneTrace">خلصت الكتابة ⭐</button>
+  </div>
+  <div id="traceTarget" style="font-size:1.2rem;font-weight:900;margin:8px">اتبع الحرف المنقط</div>
+  <canvas id="traceCanvas" aria-label="لوحة لتتبع الحروف بإصبعك أو بالفأرة" style="display:block;width:100%;max-width:650px;height:280px;margin:auto;background:#fffdf5;border:3px dashed #fbbf24;border-radius:18px;touch-action:none"></canvas>
+  <p class="subtitle">استخدم إصبعك على الموبايل أو الماوس على الكمبيوتر. تقدر تمسح وتجرب تاني.</p>
+  <div id="traceFeedback" class="feedback" aria-live="polite"></div>
+ </div>
+</section>
+<section id="animals" class="panel">
+ <div class="stage">
+  <div class="prompt">🐾 اتعرف على الحيوانات واسمع أسماءها</div>
+  <div id="animalGrid" class="grid"></div>
+  <div id="animalStory" class="feedback" aria-live="polite">اضغط على أي حيوان علشان تسمع اسمه وصوته التعليمي.</div>
+ </div>
+</section>
+<section id="parent" class="panel">
+ <div class="stage">
+  <div class="prompt">📊 لوحة متابعة التعلّم</div>
+  <p>ملخص بسيط للتقدم على هذا الجهاز والمتصفح.</p>
+  <div id="progressSummary" class="grid"></div>
+  <h3>🏅 الشارات</h3><div id="badges" class="grid"></div>
+  <button class="btn soft" id="resetProgress">إعادة ضبط التقدم على هذا الجهاز</button>
+  <p class="subtitle" style="margin-top:12px">ملاحظة لولي الأمر: البيانات محفوظة محليًا على هذا الجهاز فقط، وليست حسابًا سحابيًا ولا يمكن للمدرس رؤيتها عن بُعد.</p>
+ </div>
+</section>
 </main>
 </div>
 <div id="backdrop" class="backdrop" role="dialog" aria-modal="true" aria-label="تفاصيل الحرف">
@@ -134,6 +171,66 @@ $('startQuiz').onclick=startQuiz;
 document.querySelectorAll('[data-skill]').forEach(b=>b.onclick=()=>loadSkill(b.dataset.skill));
 
 renderStars();renderLetters();renderEnglish();loadSkill("wordpic");
+
+// أدوات الكتابة والتقدم ولوحة ولي الأمر
+const TRACK_LETTERS = [...LETTERS.map(x=>({value:x[0],name:x[1],lang:"ar"})), ...ENGLISH.map(x=>({value:x[0],name:x[2],lang:"en"}))];
+const ANIMALS = [
+ ["أسد","🦁","زئير الأسد: رووووار!","الأسد حيوان قوي ويعيش في مجموعات."],
+ ["قطة","🐱","مواء مواء","القطة تحب اللعب والراحة."],
+ ["كلب","🐶","هو هو","الكلب صديق وفيّ."],
+ ["بطة","🦆","بط بط","البطة تحب السباحة."],
+ ["فيل","🐘","صوت الفيل: برووو","الفيل حيوان كبير وله خرطوم طويل."],
+ ["عصفور","🐦","تغريد العصفور","العصفور يطير ويغرد."]
+];
+function getProgress(){try{return JSON.parse(localStorage.getItem("marah_progress")||'{"traces":0,"quizzes":0,"best":0,"starsEarned":0}')}catch{return {traces:0,quizzes:0,best:0,starsEarned:0}}}
+function saveProgress(p){try{localStorage.setItem("marah_progress",JSON.stringify(p))}catch{}}
+function recordTrace(){const p=getProgress();p.traces++;saveProgress(p);$("traceFeedback").textContent="برافو! سجلنا تدريب كتابة جديد ⭐";addStars(1);renderParent()}
+function setupTrace(){
+ const sel=$("traceLetter"),canvas=$("traceCanvas"),ctx=canvas.getContext("2d");
+ TRACK_LETTERS.forEach((x,i)=>{const o=document.createElement("option");o.value=String(i);o.textContent=x.lang==="ar"?`عربي: ${x.value} - ${x.name}`:`English: ${x.value} - ${x.name}`;sel.append(o)});
+ function resize(){
+  const rect=canvas.getBoundingClientRect(),dpr=Math.max(1,window.devicePixelRatio||1);
+  canvas.width=Math.round(rect.width*dpr);canvas.height=Math.round(280*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);drawGuide();
+ }
+ function drawGuide(){
+  const x=TRACK_LETTERS[Number(sel.value)||0],w=canvas.clientWidth;
+  ctx.clearRect(0,0,w,280);ctx.fillStyle="#e5e7eb";ctx.font=`900 ${x.value.length>1?130:175}px Cairo, sans-serif`;ctx.textAlign="center";ctx.textBaseline="middle";ctx.direction=x.lang==="ar"?"rtl":"ltr";ctx.fillText(x.value,w/2,140);
+  ctx.strokeStyle="#f59e0b";ctx.lineWidth=3;ctx.setLineDash([7,8]);ctx.strokeRect(8,8,w-16,264);ctx.setLineDash([]);
+ }
+ sel.onchange=()=>{$("traceTarget").textContent=`اتبع الحرف ${TRACK_LETTERS[Number(sel.value)].value}`;drawGuide();$("traceFeedback").textContent=""};
+ let drawing=false,hasDrawn=false;
+ function pos(e){const r=canvas.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top}}
+ canvas.addEventListener("pointerdown",e=>{drawing=true;hasDrawn=true;canvas.setPointerCapture(e.pointerId);const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.strokeStyle="#f97316";ctx.lineWidth=8;ctx.lineCap="round";ctx.lineJoin="round"});
+ canvas.addEventListener("pointermove",e=>{if(!drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke()});
+ ["pointerup","pointercancel","lostpointercapture"].forEach(ev=>canvas.addEventListener(ev,()=>{drawing=false}));
+ $("clearTrace").onclick=()=>{drawGuide();hasDrawn=false;$("traceFeedback").textContent="اللوحة اتمسحت، جرب تاني!"};
+ $("doneTrace").onclick=()=>{if(!hasDrawn){$("traceFeedback").textContent="ارسم الحرف الأول وبعدها اضغط خلصت";return}hasDrawn=false;recordTrace();drawGuide()};
+ $("traceTarget").textContent=`اتبع الحرف ${TRACK_LETTERS[0].value}`;
+ resize();window.addEventListener("resize",resize);
+}
+function renderAnimals(){
+ const g=$("animalGrid");g.replaceChildren();
+ ANIMALS.forEach(a=>{const b=document.createElement("button");b.className="letter";b.innerHTML='<div class="glyph"></div><div class="lname"></div><div class="word"></div>';b.querySelector(".glyph").textContent=a[1];b.querySelector(".lname").textContent=a[0];b.querySelector(".word").textContent="اضغط واسمع";b.onclick=()=>{speak(`${a[0]}. ${a[2]}. ${a[3]}`);$("animalStory").textContent=`${a[0]}: ${a[3]} ${a[2]}`};g.append(b)});
+}
+function renderParent(){
+ const p=getProgress(),cards=[["⭐ النجوم الحالية",stars],["✍️ تدريبات الكتابة",p.traces],["🏆 اختبارات مكتملة",p.quizzes],["🌟 أفضل نتيجة",`${p.best} / 5`]];
+ $("progressSummary").innerHTML=cards.map(c=>`<div class="stat-card">${c[0]}<strong>${c[1]}</strong></div>`).join("");
+ const defs=[["جامع النجوم","اجمع 5 نجوم",stars>=5],["محب الكتابة","أكمل 3 تدريبات كتابة",p.traces>=3],["بطل الاختبارات","أكمل اختبارًا واحدًا",p.quizzes>=1],["المثابر","اجمع 20 نجمة",stars>=20]];
+ $("badges").innerHTML=defs.map(b=>`<div class="badge-card ${b[2]?"":"locked"}">${b[2]?"🏅":"🔒"} ${b[0]}<small style="display:block">${b[1]}</small></div>`).join("");
+}
+$("resetProgress").onclick=()=>{if(confirm("هل تريد إعادة ضبط النجوم والتقدم المحفوظ على هذا الجهاز؟")){stars=0;renderStars();try{localStorage.removeItem("marah_stars");localStorage.removeItem("marah_progress")}catch{}renderParent();toast("تمت إعادة ضبط التقدم على هذا الجهاز")}};
+const originalStartQuiz=startQuiz;
+startQuiz=function(){originalStartQuiz()};
+const originalShowQuizQuestion=showQuizQuestion;
+showQuizQuestion=function(){
+ if(quizIndex>=quizQuestions.length){const p=getProgress();p.quizzes++;p.best=Math.max(p.best,quizScore);saveProgress(p)}
+ originalShowQuizQuestion();
+ renderParent();
+};
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.tab==="parent")renderParent()}));
+setupTrace();renderAnimals();renderParent();
+
 </script>
 </body>
-                                                                         </html>
+ </html>
