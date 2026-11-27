@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ff6b35">
+<meta name="description" content="مرح الحروف - ألعاب ممتعة لتعلّم الحروف العربية للأطفال">
+<title>مرح الحروف | نتعلم ونلعب</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff9ec;--ink:#1f2937;--muted:#64748b;--orange:#ff6b35;--teal:#2ec4b6;--green:#16a34a;--red:#dc2626;--shadow:0 9px 24px #1f293714;--radius:22px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;min-height:100vh;font-family:Cairo,Tahoma,sans-serif;color:var(--ink);background:radial-gradient(circle at top right,#fff0cc,var(--bg) 55%,#e8f8f5)}
+button{font:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:4px solid #2563eb;outline-offset:3px}
+.shell{max-width:1120px;margin:auto;padding:16px 14px 48px}
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:white;padding:15px 18px;border:2px solid #ffe8b3;border-radius:26px;box-shadow:var(--shadow)}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:54px;height:54px;display:grid;place-items:center;border-radius:17px;background:linear-gradient(135deg,var(--orange),#ff9f1c);color:white;font-size:28px;font-weight:900}
+h1{font-size:clamp(1.3rem,3vw,1.8rem);margin:0;font-weight:900}.subtitle{margin:2px 0 0;color:var(--muted);font-size:.88rem;font-weight:700}
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.stars,.voice{border-radius:999px;padding:8px 13px;font-weight:900}.stars{background:#fffbeb;border:2px solid #fde047;color:#92400e}.voice{border:2px solid #cbd5e1;background:#f8fafc;color:#1e293b}.voice[aria-pressed=true]{background:#ecfdf5;border-color:#34d399;color:#065f46}
+nav{display:flex;gap:10px;margin:17px 0 20px;flex-wrap:wrap}.tab{flex:1 1 180px;border:0;border-radius:18px;padding:12px;background:#fff;box-shadow:var(--shadow);font-weight:900}.tab.active{background:linear-gradient(135deg,var(--orange),#ff922b);color:#fff}
+.panel{display:none}.panel.active{display:block;animation:fade .2s ease}@keyframes fade{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:13px}
+.letter{border:3px solid #e2e8f0;background:#fff;border-radius:var(--radius);padding:13px 9px;text-align:center;box-shadow:var(--shadow);min-height:155px}.letter:active{transform:scale(.98)}.glyph{font-size:2.8rem;line-height:1.15;font-weight:900}.lname{font-weight:900}.emoji{font-size:1.7rem;margin:5px}.word{font-size:.88rem;color:var(--muted);font-weight:800}
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:12px;margin-bottom:16px}.gamepick{background:#fff;border:3px solid transparent;border-radius:20px;padding:15px;text-align:right;box-shadow:var(--shadow)}.gamepick.active{border-color:var(--orange);background:#fffaf5}.gamepick b{display:block;font-size:1.05rem}.gamepick small{color:var(--muted);font-weight:700}.gamepick span{font-size:1.8rem}
+.stage{background:#fff;border-radius:26px;padding:22px 15px;box-shadow:var(--shadow);min-height:310px;text-align:center}.prompt{display:inline-flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;background:#fef3c7;border:2px solid #fcd34d;color:#78350f;border-radius:999px;padding:9px 15px;font-size:1.05rem;font-weight:900;margin-bottom:18px}
+.btn{border:0;border-radius:14px;padding:10px 15px;font-weight:900}.soft{background:#f1f5f9;color:var(--ink)}.primary{background:var(--orange);color:#fff}.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;max-width:620px;margin:auto}.choice{border:3px solid #e2e8f0;background:#f8fafc;border-radius:19px;padding:15px}.choice.correct{background:#dcfce7;border-color:var(--green)}.choice.wrong{background:#fee2e2;border-color:var(--red)}.feedback{min-height:35px;margin-top:14px;font-weight:900;font-size:1.05rem}
+.memory{display:grid;grid-template-columns:repeat(4,minmax(60px,1fr));gap:10px;max-width:570px;margin:auto}.tile{height:100px;border:0;border-radius:17px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;font-size:1.8rem;font-weight:900}.tile.revealed{background:#fff;color:var(--ink);border:3px solid #8b5cf6}.tile.matched{background:#dcfce7;color:#166534;border:3px solid #22c55e}
+.arena{height:290px;max-width:700px;margin:auto;border:2px dashed #7dd3fc;border-radius:20px;background:linear-gradient(#e0f2fe,#f0f9ff);position:relative;overflow:hidden}.balloon{position:absolute;bottom:-90px;width:66px;height:82px;border:0;border-radius:50% 50% 45% 45%;color:white;font-size:1.7rem;font-weight:900;box-shadow:inset -5px -7px 12px #0002;animation:floatUp 5s linear forwards}@keyframes floatUp{to{transform:translateY(-390px)}}
+.backdrop{position:fixed;inset:0;background:#0f172a99;display:none;align-items:center;justify-content:center;padding:14px;z-index:5}.backdrop.open{display:flex}.modal{width:min(440px,100%);background:#fff;border-radius:27px;padding:22px;text-align:center;position:relative;box-shadow:0 20px 50px #0003}.close{position:absolute;left:12px;top:12px;border:0;border-radius:50%;width:38px;height:38px;background:#f1f5f9;font-size:1.1rem}.bigletter{font-size:5rem;font-weight:900;line-height:1.15}.bigemoji{font-size:3.4rem;margin:8px}.bigword{font-size:1.45rem;font-weight:900;margin-bottom:15px}.actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.toast{position:fixed;bottom:16px;left:50%;transform:translate(-50%,20px);opacity:0;background:#1f2937;color:#fff;padding:9px 16px;border-radius:999px;font-weight:800;transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:480px){.shell{padding:10px 9px 35px}.stage{padding:17px 10px}.memory{gap:7px}.tile{height:78px}.letter{min-height:145px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header>
+ <div class="brand"><div class="logo">أ</div><div><h1>مرح الحروف</h1><p class="subtitle">يلا نتعلم الحروف العربية ونلعب سوا!</p></div></div>
+ <div class="tools"><div class="stars">⭐ النجوم: <span id="stars">0</span></div><button id="voice" class="voice" type="button" aria-pressed="true">🔊 الصوت شغال</button></div>
+</header>
+<nav aria-label="الأقسام الرئيسية">
+ <button class="tab active" data-tab="letters">🔤 الحروف الـ 28</button><button class="tab" data-tab="games">🎮 ألعاب الحروف</button>
+</nav>
+<main>
+<section id="letters" class="panel active"><div id="lettersGrid" class="grid"></div></section>
+<section id="games" class="panel">
+ <div class="games">
+  <button class="gamepick active" data-game="find"><span>🔍</span><b>فين الحرف؟</b><small>اسمع الحرف واختاره</small></button>
+  <button class="gamepick" data-game="image"><span>🖼️</span><b>حرف وصورة</b><small>اختار أول حرف من اسم الصورة</small></button>
+  <button class="gamepick" data-game="memory"><span>🃏</span><b>لعبة الذاكرة</b><small>وصّل الحرف بصورته</small></button>
+  <button class="gamepick" data-game="balloon"><span>🎈</span><b>فرقع البالون</b><small>اختار البالون بالحرف المطلوب</small></button>
+ </div>
+ <div id="stage" class="stage"></div>
+</section>
+</main>
+</div>
+<div id="backdrop" class="backdrop" role="dialog" aria-modal="true" aria-label="تفاصيل الحرف">
+ <div class="modal"><button id="close" class="close" aria-label="إغلاق">✕</button><div id="bigLetter" class="bigletter"></div><div id="bigName" class="lname"></div><div id="bigEmoji" class="bigemoji"></div><div id="bigWord" class="bigword"></div><div class="actions"><button id="repeat" class="btn primary">🔊 اسمع تاني</button><button id="prev" class="btn soft">➡️ اللي قبله</button><button id="next" class="btn soft">اللي بعده ⬅️</button></div></div>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>
+"use strict";
+const LETTERS=[
+["أ","ألف","أَسَد","🦁","#ef4444"],["ب","باء","بَطَّة","🦆","#f97316"],["ت","تاء","تُفَّاحَة","🍎","#eab308"],["ث","ثاء","ثَعْلَب","🦊","#84cc16"],["ج","جيم","جَمَل","🐪","#10b981"],["ح","حاء","حِصَان","🐴","#06b6d4"],["خ","خاء","خَرُوف","🐑","#3b82f6"],["د","دال","دُبّ","🐻","#6366f1"],["ذ","ذال","ذُرَة","🌽","#8b5cf6"],["ر","راء","رُمَّان","🍎","#a855f7"],["ز","زاي","زَرَافَة","🦒","#d946ef"],["س","سين","سَمَكَة","🐟","#ec4899"],["ش","شين","شَمْس","☀️","#f43f5e"],["ص","صاد","صَقْر","🦅","#ea580c"],["ض","ضاد","ضِفْدَع","🐸","#65a30d"],["ط","طاء","طَائِرَة","✈️","#0d9488"],["ظ","ظاء","ظَرْف","✉️","#0284c7"],["ع","عين","عِنَب","🍇","#4f46e5"],["غ","غين","غَزَال","🦌","#7c3aed"],["ف","فاء","فِيل","🐘","#c026d3"],["ق","قاف","قِطَّة","🐱","#db2777"],["ك","كاف","كَلْب","🐶","#e11d48"],["ل","لام","لَيْمُون","🍋","#ca8a04"],["م","ميم","مَوْز","🍌","#16a34a"],["ن","نون","نَجْمَة","⭐","#0891b2"],["هـ","هاء","هِدْيَّة","🎁","#2563eb"],["و","واو","وَرْدَة","🌹","#9333ea"],["ي","ياء","يَد","✋","#e11d48"]
+];
+const praise=["شاطر يا بطل! برافو عليك!","عاش! إجابة ممتازة!","يا سلام عليك!"];
+const retry=["مش مشكلة، جرّب تاني!","قربت خالص، ركّز وجرب كمان مرة!"];
+const $=id=>document.getElementById(id);
+let stars=0,voiceOn=true,letterIndex=0,game="find",balloonLoop=null,roundLocked=false;
+try{stars=Math.max(0,Number(localStorage.getItem("marah_stars"))||0)}catch{}
+function renderStars(){$("stars").textContent=stars}
+function addStars(n){stars+=n;renderStars();try{localStorage.setItem("marah_stars",String(stars))}catch{toast("تعذر حفظ النجوم على هذا المتصفح")}}
+function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");clearTimeout(toast.timer);toast.timer=setTimeout(()=>$("toast").classList.remove("show"),1900)}
+function speak(s){if(!voiceOn||!("speechSynthesis"in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(s);u.lang="ar-EG";u.rate=.9;u.pitch=1.05;const v=speechSynthesis.getVoices().find(x=>x.lang?.toLowerCase().startsWith("ar"));if(v)u.voice=v;speechSynthesis.speak(u)}catch{}}
+function sound(ok){if(!voiceOn)return;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const c=new C(),o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.value=ok?660:220;g.gain.value=.08;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.16);o.onended=()=>c.close()}catch{}}
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+function pick(n){return shuffle(LETTERS).slice(0,n)}
+function clearLoop(){if(balloonLoop){clearInterval(balloonLoop);balloonLoop=null}}
+function renderLetters(){const g=$("lettersGrid");g.replaceChildren();LETTERS.forEach((x,i)=>{const b=document.createElement("button");b.className="letter";b.type="button";b.innerHTML=`<div class="glyph"></div><div class="lname"></div><div class="emoji"></div><div class="word"></div>`;b.querySelector(".glyph").textContent=x[0];b.querySelector(".glyph").style.color=x[4];b.querySelector(".lname").textContent="حرف "+x[1];b.querySelector(".emoji").textContent=x[3];b.querySelector(".word").textContent=x[2];b.style.borderColor=x[4]+"55";b.addEventListener("click",()=>openLetter(i));g.append(b)})}
+function openLetter(i){letterIndex=(i+LETTERS.length)%LETTERS.length;const x=LETTERS[letterIndex];$("bigLetter").textContent=x[0];$("bigLetter").style.color=x[4];$("bigName").textContent="حرف "+x[1];$("bigEmoji").textContent=x[3];$("bigWord").textContent=x[2];$("backdrop").classList.add("open");speak(`ده حرف ${x[1]}، زي ${x[2]}`)}
+function closeModal(){$("backdrop").classList.remove("open");if("speechSynthesis"in window)speechSynthesis.cancel()}
+function stage(html){clearLoop();roundLocked=false;$("stage").innerHTML=html}
+function prompt(text,id="replay"){return `<div class="prompt"><span>${text}</span><button class="btn soft" id="${id}">🔊 اسمع تاني</button></div>`}
+function feedback(ok,msg){const f=$("feedback");if(f){f.style.color=ok?"var(--green)":"var(--red)";f.textContent=msg}}
+function answer(btn,correct,onCorrect){if(roundLocked)return;if(correct){roundLocked=true;btn.classList.add("correct");addStars(1);sound(true);const p=shuffle(praise)[0];feedback(true,p+" (+1 نجمة)");speak(p);onCorrect()}else{btn.classList.add("wrong");sound(false);const r=shuffle(retry)[0];feedback(false,r);speak(r)}}
+function findGame(){const opts=pick(3),target=opts[Math.floor(Math.random()*3)],q=`فين حرف ${target[1]}؟`;stage(`${prompt(q)}<div class="choices" id="choices"></div><div id="feedback" class="feedback"></div>`);$("replay").onclick=()=>speak(q);opts.forEach(x=>{const b=document.createElement("button");b.className="choice";b.innerHTML=`<span class="glyph"></span>`;b.querySelector("span").textContent=x[0];b.querySelector("span").style.color=x[4];b.addEventListener("click",()=>answer(b,x===target,()=>setTimeout(findGame,1050)));$("choices").append(b)});speak(q)}
+function imageGame(){const opts=pick(3),target=opts[Math.floor(Math.random()*3)],q=`الصورة دي (${target[2]}) بتبدأ بحرف إيه؟`;stage(`<div style="font-size:4rem">${target[3]}</div>${prompt(q)}<div class="choices" id="choices"></div><div id="feedback" class="feedback"></div>`);$("replay").onclick=()=>speak(q);opts.forEach(x=>{const b=document.createElement("button");b.className="choice";b.innerHTML=`<div class="glyph"></div><b></b>`;b.querySelector(".glyph").textContent=x[0];b.querySelector(".glyph").style.color=x[4];b.querySelector("b").textContent=x[1];b.onclick=()=>answer(b,x===target,()=>setTimeout(imageGame,1050));$("choices").append(b)});speak(q)}
+function memoryGame(){const pairs=pick(4),deck=shuffle(pairs.flatMap((x,i)=>[{id:i,label:x[0],say:"حرف "+x[1]},{id:i,label:x[3],say:x[2]}]));stage(`${prompt("وصّل كل حرف بصورته يا بطل!","restart")}<div class="memory" id="memory"></div><div id="feedback" class="feedback"></div>`);$("restart").textContent="🔄 لعبة جديدة";$("restart").onclick=memoryGame;let first=null,lock=false,matched=0;deck.forEach(card=>{const b=document.createElement("button");b.className="tile";b.textContent="؟";b.onclick=()=>{if(lock||b.classList.contains("revealed")||b.classList.contains("matched"))return;b.classList.add("revealed");b.textContent=card.label;speak(card.say);if(!first){first={b,card};return}if(first.card.id===card.id){first.b.classList.replace("revealed","matched");b.classList.replace("revealed","matched");first=null;matched+=2;sound(true);if(matched===deck.length){addStars(2);feedback(true,"ممتاز! كسبت نجمتين ⭐⭐");speak("ممتاز! كسبت نجمتين")}}else{lock=true;const prev=first;setTimeout(()=>{prev.b.classList.remove("revealed");prev.b.textContent="؟";b.classList.remove("revealed");b.textContent="؟";first=null;lock=false},750)}};$("memory").append(b)})}
+function balloonGame(){const target=LETTERS[Math.floor(Math.random()*LETTERS.length)],q=`فرقع بالون حرف ${target[1]}!`;stage(`${prompt(q)}<div class="arena" id="arena"></div><div id="feedback" class="feedback"></div>`);$("replay").onclick=()=>speak(q);const arena=$("arena");let finished=false;function spawn(){if(finished||!arena.isConnected)return;const x=shuffle([target,...pick(2)])[0],b=document.createElement("button");b.className="balloon";b.textContent=x[0];b.style.background=x[4];b.style.left=(5+Math.random()*82)+"%";b.style.animationDuration=(4.2+Math.random()*1.3)+"s";b.onclick=()=>{if(finished)return;if(x===target){finished=true;clearLoop();b.remove();addStars(1);sound(true);feedback(true,"برافو! لقيت الحرف الصح (+1 نجمة)");speak("برافو! إجابة صحيحة");setTimeout(balloonGame,1000)}else{sound(false);feedback(false,`ده حرف ${x[1]}، دور على ${target[1]}!`);speak(`ده حرف ${x[1]}، دور على ${target[1]}`)}};b.addEventListener("animationend",()=>b.remove());arena.append(b)}spawn();spawn();balloonLoop=setInterval(spawn,1050);speak(q)}
+function loadGame(g){game=g;document.querySelectorAll(".gamepick").forEach(b=>b.classList.toggle("active",b.dataset.game===g));if(g==="find")findGame();if(g==="image")imageGame();if(g==="memory")memoryGame();if(g==="balloon")balloonGame()}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(".panel").forEach(x=>x.classList.toggle("active",x.id===b.dataset.tab));if(b.dataset.tab==="games")loadGame(game);else clearLoop()});
+document.querySelectorAll(".gamepick").forEach(b=>b.onclick=()=>loadGame(b.dataset.game));
+$("voice").onclick=()=>{voiceOn=!voiceOn;$("voice").setAttribute("aria-pressed",String(voiceOn));$("voice").textContent=voiceOn?"🔊 الصوت شغال":"🔇 الصوت مقفول";if(!voiceOn&&"speechSynthesis"in window)speechSynthesis.cancel();toast(voiceOn?"تم تشغيل الصوت":"تم كتم الصوت")};
+$("close").onclick=closeModal;$("backdrop").addEventListener("click",e=>{if(e.target===$("backdrop"))closeModal()});
+$("repeat").onclick=()=>{const x=LETTERS[letterIndex];speak(`ده حرف ${x[1]}، زي ${x[2]}`)};$("prev").onclick=()=>openLetter(letterIndex-1);$("next").onclick=()=>openLetter(letterIndex+1);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+if("speechSynthesis"in window)speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();
+renderStars();renderLetters();
+</script>
+</body>
+</html>
