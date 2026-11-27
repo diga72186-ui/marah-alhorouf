@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#ff6b35">
-<meta name="description" content="مرح الحروف - ألعاب ممتعة لتعلّم الحروف العربية للأطفال">
+<meta name="description" content="مرح الحروف - منصة تفاعلية لتعليم الحروف العربية والإنجليزية والأرقام والألوان للأطفال">
 <title>مرح الحروف | نتعلم ونلعب</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,19 +33,23 @@ nav{display:flex;gap:10px;margin:17px 0 20px;flex-wrap:wrap}.tab{flex:1 1 180px;
 .toast{position:fixed;bottom:16px;left:50%;transform:translate(-50%,20px);opacity:0;background:#1f2937;color:#fff;padding:9px 16px;border-radius:999px;font-weight:800;transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}
 @media(max-width:480px){.shell{padding:10px 9px 35px}.stage{padding:17px 10px}.memory{gap:7px}.tile{height:78px}.letter{min-height:145px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+/* إضافات الإصدار التعليمي */
+#englishGrid .letter{direction:ltr}.skill-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;max-width:650px;margin:18px auto}.skill-option{border:3px solid #e2e8f0;background:#f8fafc;border-radius:20px;padding:15px;min-height:105px;font-size:2.5rem}.skill-option b{display:block;font-size:1rem}.quiz-progress{height:12px;background:#e2e8f0;border-radius:99px;overflow:hidden;max-width:500px;margin:14px auto}.quiz-progress span{display:block;height:100%;background:#2ec4b6;transition:width .2s}.result-stars{font-size:2rem;color:#ca8a04}.tab{min-width:130px}
 </style>
 </head>
 <body>
 <div class="shell">
 <header>
- <div class="brand"><div class="logo">أ</div><div><h1>مرح الحروف</h1><p class="subtitle">يلا نتعلم الحروف العربية ونلعب سوا!</p></div></div>
+ <div class="brand"><div class="logo">أ</div><div><h1>مرح الحروف</h1><p class="subtitle">نتعلم ونلعب ونكتشف حاجات جديدة كل يوم!</p></div></div>
  <div class="tools"><div class="stars">⭐ النجوم: <span id="stars">0</span></div><button id="voice" class="voice" type="button" aria-pressed="true">🔊 الصوت شغال</button></div>
 </header>
 <nav aria-label="الأقسام الرئيسية">
- <button class="tab active" data-tab="letters">🔤 الحروف الـ 28</button><button class="tab" data-tab="games">🎮 ألعاب الحروف</button>
+ <button class="tab active" data-tab="letters">🔤 الحروف العربية</button><button class="tab" data-tab="english">🔠 English</button><button class="tab" data-tab="games">🎮 ألعاب الحروف</button><button class="tab" data-tab="skills">🧩 ألعاب الذكاء</button><button class="tab" data-tab="level">🏆 اختبر مستواك</button>
 </nav>
 <main>
 <section id="letters" class="panel active"><div id="lettersGrid" class="grid"></div></section>
+<section id="english" class="panel"><div class="prompt">🌟 Let's learn English letters! اضغط على الحرف واسمعه</div><div id="englishGrid" class="grid"></div></section>
 <section id="games" class="panel">
  <div class="games">
   <button class="gamepick active" data-game="find"><span>🔍</span><b>فين الحرف؟</b><small>اسمع الحرف واختاره</small></button>
@@ -55,6 +59,16 @@ nav{display:flex;gap:10px;margin:17px 0 20px;flex-wrap:wrap}.tab{flex:1 1 180px;
  </div>
  <div id="stage" class="stage"></div>
 </section>
+<section id="skills" class="panel">
+ <div class="games">
+  <button class="gamepick active" data-skill="wordpic"><span>🖼️</span><b>الكلمة والصورة</b><small>اقرأ الكلمة واختار صورتها</small></button>
+  <button class="gamepick" data-skill="count"><span>🔢</span><b>عدّ واختار</b><small>عدّ الأشياء واختار الرقم</small></button>
+  <button class="gamepick" data-skill="colors"><span>🎨</span><b>الألوان</b><small>اختار اللون المطلوب</small></button>
+  <button class="gamepick" data-skill="shapes"><span>🔺</span><b>الأشكال</b><small>اتعرف على الأشكال</small></button>
+ </div>
+ <div id="skillStage" class="stage"></div>
+</section>
+<section id="level" class="panel"><div class="stage"><div class="prompt">🏆 تحدي الأبطال</div><h2>اختبر معلوماتك!</h2><p>جاوب عن 5 أسئلة متنوعة، وشوف نتيجتك في النهاية.</p><button class="btn primary" id="startQuiz">ابدأ الاختبار ⭐</button><div id="quizStage" style="margin-top:18px"></div></div></section>
 </main>
 </div>
 <div id="backdrop" class="backdrop" role="dialog" aria-modal="true" aria-label="تفاصيل الحرف">
@@ -98,7 +112,28 @@ $("close").onclick=closeModal;$("backdrop").addEventListener("click",e=>{if(e.ta
 $("repeat").onclick=()=>{const x=LETTERS[letterIndex];speak(`ده حرف ${x[1]}، زي ${x[2]}`)};$("prev").onclick=()=>openLetter(letterIndex-1);$("next").onclick=()=>openLetter(letterIndex+1);
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
 if("speechSynthesis"in window)speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();
-renderStars();renderLetters();
+
+// محتوى الحروف الإنجليزية والأنشطة التعليمية الجديدة
+const ENGLISH=[['A','a','Apple','🍎'],['B','b','Ball','⚽'],['C','c','Cat','🐱'],['D','d','Dog','🐶'],['E','e','Elephant','🐘'],['F','f','Fish','🐟'],['G','g','Grapes','🍇'],['H','h','House','🏠'],['I','i','Ice cream','🍦'],['J','j','Juice','🧃'],['K','k','Kite','🪁'],['L','l','Lion','🦁'],['M','m','Moon','🌙'],['N','n','Nest','🪺'],['O','o','Orange','🍊'],['P','p','Pencil','✏️'],['Q','q','Queen','👑'],['R','r','Rabbit','🐰'],['S','s','Sun','☀️'],['T','t','Tree','🌳'],['U','u','Umbrella','☂️'],['V','v','Van','🚐'],['W','w','Watermelon','🍉'],['X','x','Xylophone','🎼'],['Y','y','Yo-yo','🪀'],['Z','z','Zebra','🦓']];
+const SKILL_ITEMS=[['تفاحة','🍎'],['كرة','⚽'],['قطة','🐱'],['أسد','🦁'],['سمكة','🐟'],['موزة','🍌'],['شمس','☀️'],['فراشة','🦋']];
+const COLORS=[['الأحمر','#ef4444'],['الأزرق','#3b82f6'],['الأخضر','#22c55e'],['الأصفر','#eab308'],['البنفسجي','#8b5cf6'],['البرتقالي','#f97316']];
+const SHAPES=[['دائرة','●'],['مربع','■'],['مثلث','▲'],['نجمة','★']];
+function speakEnglish(text){if(!voiceOn||!('speechSynthesis'in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.82;u.pitch=1.05;const v=speechSynthesis.getVoices().find(x=>x.lang?.toLowerCase().startsWith('en'));if(v)u.voice=v;speechSynthesis.speak(u)}catch{}}
+function renderEnglish(){const g=$('englishGrid');g.replaceChildren();ENGLISH.forEach(x=>{const b=document.createElement('button');b.className='letter';b.innerHTML='<div class="glyph"></div><div class="lname"></div><div class="emoji"></div><div class="word"></div>';b.querySelector('.glyph').textContent=x[0]+' '+x[1];b.querySelector('.lname').textContent=x[2];b.querySelector('.emoji').textContent=x[3];b.querySelector('.word').textContent='Letter '+x[0];b.addEventListener('click',()=>{speakEnglish(`${x[0]}, ${x[1]}, ${x[2]}`);toast(`${x[0]} - ${x[2]} ${x[3]}`)});g.append(b)})}
+function skillPrompt(q,items,correct,mode='emoji'){const box=$('skillStage');box.innerHTML=`<div class="prompt">${q}</div><div class="skill-options"></div><div id="skillFeedback" class="feedback" aria-live="polite"></div><button class="btn soft" id="newSkill">🔄 سؤال جديد</button>`;const options=box.querySelector('.skill-options');items.forEach(it=>{const b=document.createElement('button');b.className='skill-option';if(mode==='color'){b.style.background=it[1];b.style.minHeight='95px';b.textContent=' ';b.setAttribute('aria-label',it[0])}else if(mode==='shape'){b.textContent=it[1];b.style.color=['#f97316','#3b82f6','#22c55e','#8b5cf6'][items.indexOf(it)%4]}else{b.innerHTML=`<span>${it[1]}</span><b>${it[0]}</b>`}b.onclick=()=>{const ok=it[0]===correct[0];const f=$('skillFeedback');f.textContent=ok?'👏 برافو! إجابة صحيحة، كسبت نجمة ⭐':'حاول مرة تانية، أنت تقدر!';f.style.color=ok?'var(--green)':'var(--red)';if(ok){addStars(1);sound(true);[...options.children].forEach(x=>x.disabled=true);speak('ممتاز! إجابة صحيحة')}else{sound(false);speak('حاول مرة تانية')}};options.append(b)});$('newSkill').onclick=()=>loadSkill(currentSkill)}
+let currentSkill='wordpic';
+function loadSkill(type){currentSkill=type;document.querySelectorAll('[data-skill]').forEach(b=>b.classList.toggle('active',b.dataset.skill===type));if(type==='wordpic'){const target=SKILL_ITEMS[Math.floor(Math.random()*SKILL_ITEMS.length)];const opts=shuffle([target,...shuffle(SKILL_ITEMS.filter(x=>x!==target)).slice(0,2)]);skillPrompt(`فين صورة ${target[0]}؟`,opts,target)}
+if(type==='count'){const n=1+Math.floor(Math.random()*5),emoji=['🍎','⭐','🐟'][Math.floor(Math.random()*3)],opts=shuffle([n,n+1,n===1?3:n-1].map(x=>[String(x),String(x)]));skillPrompt(`عدّ: ${emoji.repeat(n)} = كام؟`,opts,[String(n),String(n)])}
+if(type==='colors'){const target=COLORS[Math.floor(Math.random()*COLORS.length)];skillPrompt(`اختار اللون ${target[0]}`,shuffle([target,...shuffle(COLORS.filter(x=>x!==target)).slice(0,2)]),target,'color')}
+if(type==='shapes'){const target=SHAPES[Math.floor(Math.random()*SHAPES.length)];skillPrompt(`فين شكل ${target[0]}؟`,shuffle([target,...shuffle(SHAPES.filter(x=>x!==target)).slice(0,2)]),target,'shape')}}
+const QUIZ=[()=>{const x=LETTERS[Math.floor(Math.random()*LETTERS.length)];return {q:`اختار أول حرف في كلمة ${x[2]} ${x[3]}`,opts:shuffle([x,...pick(2)]).map(a=>[a[0],a[0]]),a:x[0]}},()=>{const x=ENGLISH[Math.floor(Math.random()*ENGLISH.length)];return {q:`Which picture is ${x[2]}?`,opts:shuffle([x,...shuffle(ENGLISH.filter(a=>a!==x)).slice(0,2)]).map(a=>[a[3],a[3]]),a:x[3]}},()=>{const n=1+Math.floor(Math.random()*5);return {q:`عدّ النجوم: ${'⭐'.repeat(n)}`,opts:shuffle([n,n+1,n===1?3:n-1]).map(a=>[String(a),String(a)]),a:String(n)}},()=>{const x=COLORS[Math.floor(Math.random()*COLORS.length)];return {q:`ما لون ${x[0]}؟`,opts:shuffle([x,...shuffle(COLORS.filter(a=>a!==x)).slice(0,2)]).map(a=>[a[0],a[0]]),a:x[0]}},()=>{const x=SHAPES[Math.floor(Math.random()*SHAPES.length)];return {q:`ما اسم الشكل ${x[1]}؟`,opts:shuffle([x,...shuffle(SHAPES.filter(a=>a!==x)).slice(0,2)]).map(a=>[a[0],a[0]]),a:x[0]}}];
+let quizQuestions=[],quizIndex=0,quizScore=0;
+function startQuiz(){quizQuestions=shuffle(QUIZ).map(fn=>fn());quizIndex=0;quizScore=0;showQuizQuestion()}
+function showQuizQuestion(){const area=$('quizStage');if(quizIndex>=quizQuestions.length){area.innerHTML=`<h2>خلصت التحدي! 🎉</h2><div class="result-stars">${'⭐'.repeat(quizScore)}</div><h3>نتيجتك: ${quizScore} من 5</h3><p>${quizScore>=4?'ممتاز يا بطل!':'أحسنت المحاولة، جرّب مرة تانية وهتبقى أشطر!'}</p><button class="btn primary" id="againQuiz">العب تاني</button>`;$('againQuiz').onclick=startQuiz;addStars(quizScore);speak(`أحسنت! نتيجتك ${quizScore} من خمسة`);return}const q=quizQuestions[quizIndex];area.innerHTML=`<div>السؤال ${quizIndex+1} من 5</div><div class="quiz-progress"><span style="width:${quizIndex*20}%"></span></div><h3>${q.q}</h3><div class="skill-options" id="quizOptions"></div><div id="quizFeedback" class="feedback"></div>`;q.opts.forEach(o=>{const b=document.createElement('button');b.className='skill-option';b.textContent=o[0];b.onclick=()=>{[...$('quizOptions').children].forEach(x=>x.disabled=true);const ok=o[1]===q.a;if(ok){quizScore++;b.classList.add('correct');$('quizFeedback').textContent='إجابة صحيحة! ⭐';$('quizFeedback').style.color='var(--green)';sound(true)}else{$('quizFeedback').textContent='ولا يهمك، نكمل ونتعلم!';$('quizFeedback').style.color='var(--red)';sound(false)}setTimeout(()=>{quizIndex++;showQuizQuestion()},850)};$('quizOptions').append(b)})}
+$('startQuiz').onclick=startQuiz;
+document.querySelectorAll('[data-skill]').forEach(b=>b.onclick=()=>loadSkill(b.dataset.skill));
+
+renderStars();renderLetters();renderEnglish();loadSkill("wordpic");
 </script>
 </body>
-</html>
+                                                                         </html>
